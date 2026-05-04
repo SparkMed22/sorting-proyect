@@ -1,141 +1,132 @@
 #include "listas.h"
 
 
-#define CONFIRM_NOTNULL(ptr, ret) if (!(ptr)) return ret
+static bool arraylist_resize(ArrayList *list, int new_capacity) {
+    NOT_NULL(list);
 
-ArrayList* initArrayList(int cap) {
-    ArrayList *list = (ArrayList *)malloc(sizeof(ArrayList));
-    CONFIRM_NOTNULL(list, NULL);
-
-    int cap_seg = (cap <= 0) ? 5 : cap;
-    list->arr = (void **)malloc(sizeof(void *) * cap_seg);
-    
-    if (!list->arr) {
-        free(list);
-        return NULL;
+    int *new_data = realloc(list->data, new_capacity * sizeof(int));
+    if (new_data == NULL) {
+        return false;
     }
 
-    list->cap = cap_seg;
+    list->data = new_data;
+    list->capacity = new_capacity;
+    return true;
+}
+
+ArrayList* arraylist_create(int capacity) {
+    if (capacity <= 0) capacity = 4; // tamaño mínimo razonable
+
+    ArrayList *list = (ArrayList*) malloc(sizeof(ArrayList));
+    NOT_NULL(list);
+
+    list->data = (int*) malloc(capacity * sizeof(int));
+    NOT_NULL(list->data);
+
     list->size = 0;
+    list->capacity = capacity;
+
     return list;
 }
 
-static Bool _expand(ArrayList *list) {
-    int new_cap = list->cap * 2;
-    void **new_arr = realloc(list->arr, sizeof(void *) * new_cap);
-    CONFIRM_NOTNULL(new_arr, FALSE);
-    
-    list->arr = new_arr;
-    list->cap = new_cap;
-    return TRUE;
-}
 
-Bool push(ArrayList *list, void *element) {
-    CONFIRM_NOTNULL(list, FALSE);
+bool arraylist_push(ArrayList *list, int value) {
+    NOT_NULL(list);
 
-    if (list->size == list->cap) {
-        if (!_expand(list)) return FALSE;
+    // si está lleno → duplicar capacidad
+    if (list->size >= list->capacity) {
+        if (!arraylist_resize(list, list->capacity * 2)) {
+            return false;
+        }
     }
 
-    list->arr[list->size] = element;
+    list->data[list->size] = value;
     list->size++;
-    return TRUE;
+
+    return true;
 }
 
-void* pop(ArrayList *list) {
-    if (!list || list->size == 0) return NULL;
-    
-    list->size--;
-    return list->arr[list->size];
-}
-
-void* get(ArrayList *list, int index) {
-    if (!list || index < 0 || index >= list->size) return NULL;
-    return list->arr[index];
-}
-
-Bool freeArrayList(ArrayList *list) {
-    CONFIRM_NOTNULL(list, FALSE);
-    
-    // Nota: Esta función libera el arreglo, pero NO los datos 
-    // contenidos si estos fueron reservados dinámicamente fuera.
-    free(list->arr);
-    free(list);
-    return TRUE;
-}
-
-
-
-/**
- * Implementacion de LinkeList
- */
-
-LinkedList *createLinkedList()
-{
-  LinkedList *linkedList = (LinkedList *)malloc(sizeof(LinkedList));
-  MACRO_NOT_NULL(linkedList);
-  linkedList->head = NULL;
-  linkedList->size = 0;
-  linkedList->ultimo = NULL;
-  return linkedList;
-}
-
-Nodo *createNodo(int valor)
-{
-  Nodo *nodo = (Nodo *)malloc(sizeof(Nodo));
-  MACRO_NOT_NULL(nodo);
-  nodo->valor = valor;
-  nodo->sig = NULL;
-  return nodo;
-}
-
-void addLinkedList(LinkedList *list, int valor)
-{
-
-  Nodo *nuevo = createNodo(valor);
-
-  if (list->head == NULL)
-  {
-    list->head = nuevo;
-    list->ultimo = nuevo;
-  }
-  else
-  {
-    list->ultimo->sig = nuevo;
-    list->ultimo = nuevo;
-  }
-  list->size += 1;
-}
-
-void printLinkedList(LinkedList *list)
-{
-  if (list->head == NULL)
-  {
-    printf("Lista sin elemento...\n");
-  }
-  else
-  {
-    Nodo *nodo = list->head;
-    for (int i = 0; i < list->size; i++)
-    {
-      printf("\nValor agregado es: %d", nodo->valor);
-      nodo = nodo->sig;
+void arraylist_print(ArrayList *list) {
+    if (list == NULL) {
+        printf("[NULL]\n");
+        return;
     }
-  }
+
+    printf("[ ");
+    for (int i = 0; i < list->size; i++) {
+        printf("%d ", list->data[i]);
+    }
+    printf("]\n");
 }
 
+void arraylist_free(ArrayList *list) {
+    if (list == NULL) return;
 
-void freeMemory(LinkedList *list) {
-    Nodo *actual = list->head;
-    while (actual != NULL) {
-        Nodo *temp = actual->sig;
-        free(actual);
-        actual = temp;
-    }
+    free(list->data);
     free(list);
 }
 
 
+LinkedList* linkedlist_create() {
+    LinkedList *list = (LinkedList*) malloc(sizeof(LinkedList));
+    NOT_NULL(list);
 
+    list->head = NULL;
+    list->tail = NULL;
+    list->size = 0;
 
+    return list;
+}
 
+Nodo* nodo_create(int value) {
+    Nodo *node = (Nodo*) malloc(sizeof(Nodo));
+    NOT_NULL(node);
+
+    node->value = value;
+    node->next = NULL;
+
+    return node;
+}
+
+void linkedlist_add(LinkedList *list, int value) {
+    NOT_NULL(list);
+
+    Nodo *new_node = nodo_create(value);
+
+    if (list->head == NULL) {
+        // lista vacía
+        list->head = new_node;
+        list->tail = new_node;
+    } else {
+        list->tail->next = new_node;
+        list->tail = new_node;
+    }
+
+    list->size++;
+}
+
+void linkedlist_print(LinkedList *list) {
+    NOT_NULL(list);
+
+    Nodo *current = list->head;
+
+    printf("[ ");
+    while (current != NULL) {
+        printf("%d ", current->value);
+        current = current->next;
+    }
+    printf("]\n");
+}
+
+void linkedlist_free(LinkedList *list) {
+    if (list == NULL) return;
+
+    Nodo *current = list->head;
+    while (current != NULL) {
+        Nodo *temp = current;
+        current = current->next;
+        free(temp);
+    }
+
+    free(list);
+}

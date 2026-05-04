@@ -2,59 +2,52 @@
 #define LISTAS_H
 
 #include <stdbool.h>
-#include <assert.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <stdio.h>
+#include <assert.h>
 
-
-typedef enum { FALSE = 0, TRUE = 1 } Bool;
-
-typedef struct _ArrayList {
+typedef struct {
     int size;
-    int cap;
-    void **arr;
+    int capacity;
+    int *data;
 } ArrayList;
 
-ArrayList* initArrayList(int cap);
-Bool push(ArrayList *list, void *element);
-void* pop(ArrayList *list);
-void* get(ArrayList *list, int index);
-Bool freeArrayList(ArrayList *list);
+ArrayList* arraylist_create(int capacity);
 
-/**
- * Macro para verificar que un puntero no sea NULL
- */
-#define MACRO_NOT_NULL(ptr)                                    \
-    {                                                          \
-        assert(ptr != NULL && "ERROR AL RECERVAR LA MEMORIA"); \
-    }
+void arraylist_print(ArrayList *list);
 
-#define MACRO_LinkedList_NOT_NULL(ptr)                  \
-    {                                                   \
-        assert(ptr != NULL && "EL LinkedList ES NULL"); \
-    }
-/**
- * Implementacion de listas Ligadas
- */
+bool arraylist_push(ArrayList *list, int value);
 
-typedef struct _nodo
-{
-    int valor;
-    struct _nodo *sig;
+void arraylist_free(ArrayList *list);
+
+
+/* ===========================
+   LINKED LIST (simple)
+   =========================== */
+
+typedef struct Nodo {
+    int value;
+    struct Nodo *next;
 } Nodo;
 
-typedef struct _linkedList
-{
+typedef struct {
     Nodo *head;
+    Nodo *tail;
     int size;
-    Nodo *ultimo;
 } LinkedList;
 
-LinkedList *createLinkedList();
-Nodo *createNodo(int valor);
-void addLinkedList(LinkedList *list, int valor);
-void printLinkedList(LinkedList *list);
-void freeMemory(LinkedList *list);
+LinkedList* linkedlist_create();
+Nodo* nodo_create(int value);
+
+void linkedlist_add(LinkedList *list, int value);        // al final
+
+void linkedlist_print(LinkedList *list);
+
+void linkedlist_free(LinkedList *list);
+
+#define NOT_NULL(ptr) assert((ptr) != NULL)
+
+#define CHECK_INDEX(i, size) \
+    assert((i) >= 0 && (i) < (size))
 
 #endif

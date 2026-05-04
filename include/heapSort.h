@@ -7,5 +7,4 @@ void heapSortArrayList(ArrayList *list);
 
 void heapSortLinkedList(LinkedList *list);
 
-
 #endif
