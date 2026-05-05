@@ -3,8 +3,10 @@
 
 #include "listas.h"
 
-void heapSortArrayList(ArrayList *list);
+void heapSortArray(int *datos, int cant);
 
-void heapSortLinkedList(LinkedList *list);
+void heapSortArrayList(ArrayList *list, int cant);
+
+void heapSortLinkedList(LinkedList *list, int cant);
 
 #endif

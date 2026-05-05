@@ -1,19 +1,17 @@
 #include "heapSort.h"
+#include "listas.h"
 
-/* ===========================
-   AUXILIARES (ARRAY)
-   =========================== */
-
+// ==================== AUXILIAR ====================
 static void swap(int *a, int *b) {
     int temp = *a;
     *a = *b;
     *b = temp;
 }
 
-static void heapify(int arr[], int n, int i) {
-    int largest = i;
-    int left = 2 * i + 1;
-    int right = 2 * i + 2;
+static void heapify(int *arr, int n, int i) {
+    int largest = i;        // raíz
+    int left = 2 * i + 1;  // hijo izquierdo
+    int right = 2 * i + 2; // hijo derecho
 
     if (left < n && arr[left] > arr[largest])
         largest = left;
@@ -27,67 +25,51 @@ static void heapify(int arr[], int n, int i) {
     }
 }
 
+// ==================== ARRAY ====================
+void heapSortArray(int *datos, int cant) {
+    if (datos == NULL || cant <= 1) return;
 
-/* ===========================
-   HEAPSORT ARRAYLIST
-   =========================== */
-
-void heapSortArrayList(ArrayList *list) {
-    NOT_NULL(list);
-
-    int n = list->size;
-    int *arr = list->data;
-
-    // Construir heap (reorganizar array)
-    for (int i = n / 2 - 1; i >= 0; i--) {
-        heapify(arr, n, i);
+    for (int i = cant / 2 - 1; i >= 0; i--) {
+        heapify(datos, cant, i);
     }
 
-    // Extraer elementos del heap
-    for (int i = n - 1; i > 0; i--) {
-        swap(&arr[0], &arr[i]);     // mover raíz al final
-        heapify(arr, i, 0);         // re-heapify
+    for (int i = cant - 1; i > 0; i--) {
+        swap(&datos[0], &datos[i]); 
+        heapify(datos, i, 0);       
     }
 }
 
+// ==================== ARRAYLIST ====================
+void heapSortArrayList(ArrayList *list, int cant) {
+    if (list == NULL || list->data == NULL || cant <= 1) return;
 
-/* ===========================
-   HEAPSORT LINKEDLIST
-   =========================== */
+    if (cant > list->size) cant = list->size;
 
-void heapSortLinkedList(LinkedList *list) {
-    NOT_NULL(list);
+    heapSortArray(list->data, cant);
+}
 
-    if (list->size <= 1) return;
+// ==================== LINKEDLIST ====================
+void heapSortLinkedList(LinkedList *list, int cant) {
+    if (list == NULL || cant <= 1) return;
 
-    int n = list->size;
+    if (cant > list->size) cant = list->size;
 
-    // 1. Copiar a array
-    int *arr = (int*) malloc(n * sizeof(int));
-    NOT_NULL(arr);
+    int *temp = (int*) malloc(sizeof(int) * cant);
+    NOT_NULL(temp);
 
     Nodo *current = list->head;
-    for (int i = 0; i < n; i++) {
-        arr[i] = current->value;
+    for (int i = 0; i < cant && current != NULL; i++) {
+        temp[i] = current->value;
         current = current->next;
     }
 
-    // 2. HeapSort sobre array
-    for (int i = n / 2 - 1; i >= 0; i--) {
-        heapify(arr, n, i);
-    }
+    heapSortArray(temp, cant);
 
-    for (int i = n - 1; i > 0; i--) {
-        swap(&arr[0], &arr[i]);
-        heapify(arr, i, 0);
-    }
-
-    // 3. Volver a copiar a la lista
     current = list->head;
-    for (int i = 0; i < n; i++) {
-        current->value = arr[i];
+    for (int i = 0; i < cant && current != NULL; i++) {
+        current->value = temp[i];
         current = current->next;
     }
 
-    free(arr);
+    free(temp);
 }

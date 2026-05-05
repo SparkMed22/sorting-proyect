@@ -39,7 +39,7 @@ typedef struct {
 LinkedList* linkedlist_create();
 Nodo* nodo_create(int value);
 
-void linkedlist_add(LinkedList *list, int value);        // al final
+void linkedlist_add(LinkedList *list, int value); 
 
 void linkedlist_print(LinkedList *list);
 
