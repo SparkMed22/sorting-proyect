@@ -2,86 +2,83 @@
 #include <stdlib.h>
 #include <time.h>
 #include "listas.h"
-#include "test_RadixSort.h"
+#include "heapSort.h"
+#include "radixSort.h"
+#include "util.h"
 
+// Tamaños de prueba definidos según tus implementaciones previas
+static int sizes[] = {100, 1000, 5000, 10000, 50000, 100000, 500000, 1000000};
+static int num_sizes = 8;
 
-int main() {
-    int mode;
-    printf("1 = random | 2 = sorted | 3 = reversed\n");
-    scanf("%d", &mode);
-
-    if (mode == 1) {
-        return radix_sort_random();
-    } else if (mode == 2) {
-        return radix_sort_sorted();
-    } else {
-        return radix_sort_reversed();
+void ejecutar_comparativa(const char* nombre_archivo, int tipo_dato) {
+    FILE *file = fopen(nombre_archivo, "w");
+    if (!file) {
+        printf("Error al crear el archivo %s\n", nombre_archivo);
+        return;
     }
 
-    return 0;
+    fprintf(file, "size,heap_array,radix_array,heap_linkedlist,radix_linkedlist\n");
+    printf("\n--- Comparativa: %s ---\n", nombre_archivo);
+
+    for (int i = 0; i < num_sizes; i++) {
+        int n = sizes[i];
+        int *base = malloc(n * sizeof(int));
+        
+        // Generación de datos
+        if (tipo_dato == 1) generateRandom(base, n);
+        else if (tipo_dato == 2) generateSorted(base, n);
+        else generateReversed(base, n);
+
+        // --- Benchmark HeapSort (Array) ---
+        int *arr_heap = malloc(n * sizeof(int));
+        for(int j=0; j<n; j++) arr_heap[j] = base[j];
+        clock_t start = clock();
+        heapSortArray(arr_heap, n);
+        double t_heap_arr = (double)(clock() - start) / CLOCKS_PER_SEC;
+
+        // --- Benchmark RadixSort (Array) ---
+        int *arr_radix = malloc(n * sizeof(int));
+        for(int j=0; j<n; j++) arr_radix[j] = base[j];
+        start = clock();
+        radixSortArray(arr_radix, n);
+        double t_radix_arr = (double)(clock() - start) / CLOCKS_PER_SEC;
+
+        // --- Benchmark HeapSort (LinkedList) ---
+        LinkedList *list_heap = linkedlist_create();
+        for(int j=0; j<n; j++) linkedlist_add(list_heap, base[j]);
+        start = clock();
+        heapSortLinkedList(list_heap, n);
+        double t_heap_ll = (double)(clock() - start) / CLOCKS_PER_SEC;
+
+        // --- Benchmark RadixSort (LinkedList) ---
+        LinkedList *list_radix = linkedlist_create();
+        for(int j=0; j<n; j++) linkedlist_add(list_radix, base[j]);
+        start = clock();
+        radixSortLinkedList(list_radix);
+        double t_radix_ll = (double)(clock() - start) / CLOCKS_PER_SEC;
+
+        // Guardar y mostrar resultados
+        fprintf(file, "%d, %f, %f, %f, %f\n", n, t_heap_arr, t_radix_arr, t_heap_ll, t_radix_ll);
+        printf("n=%7d | Heap: %f | Radix: %f (Array)\n", n, t_heap_arr, t_radix_arr);
+
+        // Liberar memoria para la siguiente iteración
+        free(base);
+        free(arr_heap);
+        free(arr_radix);
+        linkedlist_free(list_heap);
+        linkedlist_free(list_radix);
+    }
+    fclose(file);
 }
-/*
+
 int main() {
-    // Inicializar generador de números aleatorios
     srand((unsigned int)time(NULL));
+    
+    // 1=Aleatorio, 2=Ordenado, 3=Invertido
+    ejecutar_comparativa("vs-aleatorio.csv", 1);
+    ejecutar_comparativa("vs-ordenado.csv", 2);
+    ejecutar_comparativa("vs-invertido.csv", 3);
 
-     ===========================
-       TEST ARRAY LIST
-       =========================== 
-    printf("=== ArrayList ===\n");
-
-    ArrayList *arr = arraylist_create(2); // Capacidad inicial pequeña para forzar resize
-
-    // Insertar 100 elementos aleatorios entre 1 y 1000
-    printf("Insertando 100 elementos aleatorios en ArrayList...\n");
-    for (int i = 0; i < 100; i++) {
-        int valor = rand() % 1000 + 1;
-        if (!arraylist_push(arr, valor)) {
-            printf("Error al insertar en ArrayList\n");
-            arraylist_free(arr);
-            return 1;
-        }
-    }
-
-    printf("Elementos en ArrayList (antes de ordenar): ");
-    arraylist_print(arr);
-
-    // Ordenar el ArrayList
-    heapSortArrayList(arr);
-
-    printf("\nElementos en ArrayList (ordenados): ");
-    arraylist_print(arr);
-    printf("\nSize: %d | Capacity: %d\n", arr->size, arr->capacity);
-
-    arraylist_free(arr);
-
-        ===========================
-       TEST LINKED LIST
-       =========================== 
-    printf("\n=== LinkedList ===\n");
-
-    LinkedList *list = linkedlist_create();
-
-    // Insertar 100 elementos aleatorios entre 1 y 1000
-    printf("Insertando 100 elementos aleatorios en LinkedList...\n");
-    for (int i = 0; i < 100; i++) {
-        int valor = rand() % 1000 + 1;
-        linkedlist_add(list, valor);
-    }
-
-    printf("Elementos en LinkedList (antes de ordenar): ");
-    linkedlist_print(list);
-
-    printf("Size: %d\n", list->size);
-
-    // Ordenar la LinkedList
-    heapSortLinkedList(list);
-
-    printf("Elementos en LinkedList (ordenados): ");
-    linkedlist_print(list);
-
-    linkedlist_free(list);
-
+    printf("\nEnfrentamiento finalizado. Revisa los archivos .csv generados.\n");
     return 0;
 }
-*/

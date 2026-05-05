@@ -7,12 +7,12 @@ OBJ_DIR = obj
 BASE_SRCS = src/listas.c src/util.c
 
 HEAP_SRCS = src/heapSort.c src/test_HeapSort.c
-RADIX_SRCS = src/radixSort.c src/test_RadixSort.c src/main.c
-MAIN_SRCS = src/main.c
+RADIX_SRCS = src/radixSort.c src/test_RadixSort.c 
+MAIN_SRCS = src/main.c  src/heapSort.c src/radixSort.c
 
 .PHONY: all clean test_heap test_radix run_main
 
-programa.exe: $(MAIN_SRCS) $(BASE_SRCS) $(HEAP_SRCS) $(RADIX_SRCS)
+programa.exe: $(MAIN_SRCS) $(BASE_SRCS)
 	$(CC) $(CFLAGS) $^ -o $@
 
 all: programa.exe

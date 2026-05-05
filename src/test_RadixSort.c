@@ -290,3 +290,19 @@ int radix_sort_reversed() {
 
     return 0;
 }
+
+int main() {
+    int mode;
+    printf("1 = random | 2 = sorted | 3 = reversed\n");
+    scanf("%d", &mode);
+
+    if (mode == 1) {
+        return radix_sort_random();
+    } else if (mode == 2) {
+        return radix_sort_sorted();
+    } else {
+        return radix_sort_reversed();
+    }
+
+    return 0;
+}
