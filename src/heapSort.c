@@ -15,10 +15,8 @@ static void heapify(int *arr, int n, int i) {
 
     if (left < n && arr[left] > arr[largest])
         largest = left;
-
     if (right < n && arr[right] > arr[largest])
         largest = right;
-
     if (largest != i) {
         swap(&arr[i], &arr[largest]);
         heapify(arr, n, largest);
@@ -28,11 +26,9 @@ static void heapify(int *arr, int n, int i) {
 // ==================== ARRAY ====================
 void heapSortArray(int *datos, int cant) {
     if (datos == NULL || cant <= 1) return;
-
     for (int i = cant / 2 - 1; i >= 0; i--) {
         heapify(datos, cant, i);
     }
-
     for (int i = cant - 1; i > 0; i--) {
         swap(&datos[0], &datos[i]); 
         heapify(datos, i, 0);       

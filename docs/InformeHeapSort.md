@@ -1,462 +1,185 @@
+# Informe Técnico: HeapSort
 
+**HeapSort** es un algoritmo de ordenamiento basado en la estructura de datos *heap binario*, típicamente un **max-heap**. Su funcionamiento se apoya en dos fases principales:
 
+1. **Construcción del heap** a partir de los datos de entrada.
+2. **Extracción iterativa del máximo**, colocándolo al final del arreglo y reajustando el heap.
 
-⚠️ Detalle importante
+Conceptualmente, puede imaginarse como una estructura jerárquica donde el elemento de mayor valor siempre ocupa la raíz, facilitando su extracción ordenada.
 
-Para LinkedList, HeapSort no es natural, porque:
+## Implementaciones y Comparativa
 
-No hay acceso por índice → heapify sería un infierno
-Por eso hacemos el truco: lista → array → heap → lista
+### HeapSort con Array
 
+**Características:**
 
+* Acceso aleatorio en tiempo constante (O(1))
+* Representación directa del heap mediante índices
+* Alta localidad de memoria (cache-friendly)
 
+**Ventajas:**
 
-# Aleatorio s
+* Alto rendimiento en la práctica
+* Implementación simple y directa
+* Sin sobrecarga adicional de estructuras dinámicas
 
-Tenés tres curvas compitiendo como si fueran corredores con distintas zapatillas. La clave es **cómo crecen** más que quién gana por milésimas en un punto.
+**Desventajas:**
 
----
+* Tamaño fijo en lenguajes como C
+* Menor flexibilidad estructural
 
-## 🧠 Lectura general del gráfico
-
-1. **Eje X (size)**
-   Tamaño del input.
-
-2. **Eje Y (tiempo)**
-   Cuánto tarda HeapSort en cada estructura.
-
-3. **Las tres líneas**
-
-   * `Array`
-   * `ArrayList`
-   * `LinkedList`
-
----
-
-## ⚙️ Lo importante de verdad
-
-### 1. La forma de las curvas
-
-Si las tres suben de forma parecida (curva suave, tipo misma pendiente), entonces:
-
-> 👉 Todas tienen **misma complejidad** (≈ O(n log n))
-
-HeapSort debería comportarse así. Si una se dispara raro, algo anda mal en la implementación.
+**Conclusión:**
+Es la implementación **más eficiente y natural**. HeapSort está diseñado para operar sobre arreglos.
 
 ---
 
-### 2. Quién está más abajo 🪶
+### HeapSort con ArrayList
 
-La línea más baja = más rápida.
+**Características:**
 
-De tus datos:
+* Estructura dinámica basada internamente en arrays
+* Acceso aleatorio (O(1))
 
-* `ArrayList` suele estar ligeramente abajo → 🥇
-* `Array` muy cerca → 🥈
-* `LinkedList` a veces se queda atrás → 🥉
+**Ventajas:**
 
-Pero no es una paliza, es más bien una carrera ajustada.
+* Flexibilidad en el tamaño
+* Código más expresivo en lenguajes modernos
 
----
+**Desventajas:**
 
-### 3. Diferencias pequeñas ≠ diferencia real
+* Ligera sobrecarga por gestión dinámica
+* Posibles costos de redimensionamiento
 
-Ejemplo:
-
-```
-0.002267 vs 0.002454
-```
-
-Eso es **ruido experimental**, no una victoria clara.
-
-En benchmarking:
-
-* diferencias < ~10% → meh 😐
-* diferencias grandes → ahí sí importa
+**Conclusión:**
+Ofrece un rendimiento **muy cercano al array**, siendo una opción adecuada cuando se requiere flexibilidad.
 
 ---
 
-### 4. El sospechoso habitual: LinkedList
+### HeapSort con LinkedList
 
-Si en tamaños grandes empieza a rendir peor:
+**Características:**
+* Acceso por índice en (O(n))
+* Memoria no contigua
 
-> 💡 Tiene sentido: acceso no contiguo en memoria
+**Ventajas:**
 
-HeapSort necesita acceso rápido por índice →
-LinkedList no es fan de eso.
+* Inserciones y eliminaciones eficientes (no relevantes para HeapSort)
 
----
+**Desventajas:**
 
-## 📈 Lectura más fina (modo ingeniero 🧩)
+* Acceso ineficiente para operaciones de heap
+* Baja localidad de memoria
+* Penalización significativa en rendimiento
 
-* HeapSort hace muchas operaciones de acceso por índice
-* En:
-
-  * `Array` → acceso O(1) real
-  * `ArrayList` → también O(1), pero con overhead mínimo
-  * `LinkedList` → acceso O(n) 😬
-
-👉 Resultado esperado:
-
-* LinkedList debería degradarse más al crecer n
-
-Y en tus datos… se empieza a notar en los tamaños grandes.
-
----
-
-## 🧾 Conclusión clara
-
-* Las 3 estructuras escalan parecido → algoritmo correcto ✅
-* `ArrayList` y `Array` son más eficientes en práctica
-* `LinkedList` penaliza por su estructura interna
-
----
-
-## 🧪 Bonus (si querés subir nivel)
-
-Podés decir en tu informe algo como:
-
-> “Aunque la complejidad teórica de HeapSort es O(n log n) para todas las estructuras, en la práctica el rendimiento varía debido al costo de acceso a memoria. Las estructuras basadas en arrays muestran mejor desempeño que las listas enlazadas.”
-
----
-
-Si querés, te ayudo a convertir esto en un párrafo formal para el informe y te queda listo para entregar sin que el profe te haga preguntas incómodas 😏
+**Conclusión:**
+No es una estructura adecuada para HeapSort. Su uso implica una degradación del rendimiento debido a la falta de acceso aleatorio eficiente.
 
 
 
+## Complejidad Algorítmica
 
-# Invertido 
+La complejidad total de HeapSort es: **O(n \log n)**
 
-Vamos por partes: código listo + lectura sin humo.
+### Justificación:
 
----
+* **Construcción del heap:** (O(n))
+* **Extracciones:** (n) operaciones de (O(\log n))
 
-# 📊 Código para `heap-invertido-results.csv`
+Resultado total:
 
-Es básicamente el mismo motor, cambiando el archivo y el nombre de salida.
+* Mejor caso: (O(n \log n))
+* Caso promedio: (O(n \log n))
+* Peor caso: (O(n \log n))
 
-```python id="heapinv1"
-import csv
-import matplotlib.pyplot as plt
+**Conclusión:**
+HeapSort presenta un comportamiento **determinista y estable en complejidad**, independiente del orden inicial de los datos.
 
-sizes = []
-array_time = []
-arraylist_time = []
-linkedlist_time = []
 
-with open('heap-invertido-results.csv', newline='', encoding='utf-8-sig') as csvfile:
-    reader = csv.DictReader(csvfile)
-    
-    # limpiar headers por si vienen con espacios raros
-    reader.fieldnames = [field.strip() for field in reader.fieldnames]
-    
-    for row in reader:
-        sizes.append(int(row['size']))
-        array_time.append(float(row['array_time']))
-        arraylist_time.append(float(row['arraylist_time']))
-        linkedlist_time.append(float(row['linkedlist_time']))
+## Casos de Uso
 
-# gráfico
-plt.figure()
-plt.plot(sizes, array_time, label='Array')
-plt.plot(sizes, arraylist_time, label='ArrayList')
-plt.plot(sizes, linkedlist_time, label='LinkedList')
+### ✔ Recomendado cuando:
 
-plt.xlabel('Tamaño (n)')
-plt.ylabel('Tiempo (segundos)')
-plt.title('HeapSort - Caso Invertido')
-plt.legend()
-plt.grid()
+* Se requiere **complejidad garantizada** (O(n \log n))
+* Se desea evitar el peor caso de algoritmos como QuickSort
+* Se necesita un algoritmo **in-place** (uso de memoria (O(1)))
 
-# guardar PNG
-plt.savefig('grafico_heap_invertido.png', dpi=300)
+### ❌ No recomendado cuando:
 
-plt.show()
-```
+* Se requiere **estabilidad** (HeapSort no es estable)
+* El volumen de datos es pequeño
+* La estructura no permite acceso aleatorio eficiente
+
+
+## Resultado de Laboratorio
+
+### Datos Aleatorios
+
+* **Array y ArrayList** presentan el mejor rendimiento
+* **LinkedList** es más lento debido al acceso secuencial
+* HeapSort mantiene comportamiento uniforme
+
+**Nota crítica:**
+La supuesta ventaja de LinkedList en grandes volúmenes es **sospechosa** desde el punto de vista teórico. HeapSort depende de acceso por índice; si LinkedList resulta más rápido, probablemente:
+
+* La implementación **no es un HeapSort puro**
+* Se están midiendo efectos de memoria o caché
+
+![Datos Aleatorios](./../img/heap-aleatorio.png)
 
 ---
 
-# 🧠 Interpretación (caso invertido)
+### Datos Ordenados
 
-Este caso suele representar un input “peor organizado posible” para muchos algoritmos…
-pero HeapSort no se asusta tanto 😐
+* No hay mejora significativa
+* HeapSort no aprovecha el orden previo
 
----
+![Datos Ordenados](./../img/heap-ordenado.png)
 
-## 1. 📈 Forma de las curvas
-
-Las tres curvas:
-
-* crecen de forma suave
-* no explotan
-* mantienen tendencia similar
-
-👉 Traducción directa:
-
-> HeapSort sigue siendo **O(n log n)** incluso con datos invertidos.
-
-✔️ Consistente con la teoría.
+**Resultado:**
+Rendimiento prácticamente idéntico al caso promedio.
 
 ---
 
-## 2. 🥇 ¿Quién gana?
+### Datos Invertidos
 
-Mirando tamaños grandes:
+![Datos Aleatorios](./../img/heap-invertido.png)
 
-| Tamaño | Mejor     |
-| ------ | --------- |
-| 500k   | ArrayList |
-| 1M     | Array     |
-| 2M     | ArrayList |
-
-👉 Resultado:
-
-* **ArrayList y Array están muy parejos**
-* **LinkedList queda un poco atrás** (otra vez)
-
-Nada sorprendente.
+* Mismo comportamiento que otros casos
+* Se confirma la independencia del input
 
 ---
 
-## 3. 🧪 Comparación con el caso aleatorio
+### Escalabilidad
 
-Aquí está lo interesante:
+* Todos los casos crecen conforme a (O(n \log n))
+* Array mantiene ventaja constante
+* LinkedList escala peor debido a su estructura
 
-### 🔹 En teoría:
 
-HeapSort debería rendir parecido en:
+## Discusión Técnica
 
-* datos aleatorios
-* datos invertidos
+HeapSort destaca por su **consistencia**, pero no por ser el más rápido en la práctica. Su rendimiento real depende fuertemente de la estructura subyacente:
 
-### 🔹 En tus datos:
-
-✔️ Se cumple bastante bien
-
-Las diferencias:
-
-* son pequeñas
-* no cambian el orden general
-
-👉 Conclusión clave:
-
-> HeapSort es **insensible al orden inicial** (a diferencia de QuickSort, por ejemplo)
+* **Array:** maximiza eficiencia por acceso directo y caché
+* **ArrayList:** ligera penalización por abstracción
+* **LinkedList:** incompatibilidad estructural con el algoritmo
 
 ---
 
-## 4. 🧱 El patrón que se repite
+## Conclusión General
 
-LinkedList vuelve a sufrir en silencio:
+HeapSort es un algoritmo:
 
-* Más lento en general
-* Diferencia más visible cuando n crece
+* **Robusto**: sin degradación en peor caso
+* **Predecible**: comportamiento uniforme
+* **Eficiente en memoria**: in-place
 
-💡 Motivo:
-HeapSort necesita acceso por índice
-→ LinkedList no está hecha para eso
+Sin embargo:
 
----
+* No es el más rápido frente a alternativas como QuickSort
+* Su rendimiento depende críticamente de la estructura utilizada
 
-## 5. ⚖️ Diferencias reales vs ruido
+###  Síntesis final
 
-Ejemplo:
-
-```id="noise1"
-0.242568 vs 0.257268
-```
-
-Eso es ≈ 6%
-
-👉 Traducción:
-
-* No es una ventaja estructural fuerte
-* Puede ser cache, CPU, o ruido
-
----
-
-# 🧾 Conclusión clara para informe
-
-Podés decir algo así:
-
-> En el caso de entrada invertida, HeapSort mantiene un comportamiento consistente con su complejidad O(n log n), mostrando curvas de crecimiento similares a las del caso aleatorio. Las estructuras basadas en arreglos (Array y ArrayList) presentan un rendimiento levemente superior a LinkedList, lo cual se explica por el acceso eficiente por índice requerido por el algoritmo. Además, se observa que el orden inicial de los datos no afecta significativamente el desempeño, confirmando que HeapSort es poco sensible a la disposición inicial de la entrada.
-
----
-
-## 🎯 Resumen en una línea
-
-HeapSort es como un tractor:
-le da igual si el terreno está ordenado, invertido o caótico… avanza igual 🚜
-
----
-
-Si querés, el siguiente nivel sería:
-
-* juntar ambas gráficas en una sola comparación 🔥
-* o hacer un análisis automático de cuál gana por porcentaje
-
-Ahí ya estás jugando en modo “proyecto serio”, no solo tarea.
-
-
-
-
-
-
-
-
-# Ordenado 
-
-
-Perfecto: este es el **tercer escenario (ordenado)**, y junto con los otros dos ya tenés un análisis bastante sólido.
-
----
-
-# 📊 Código para `heap-ordenado-results.csv`
-
-```python
-import csv
-import matplotlib.pyplot as plt
-
-sizes = []
-array_time = []
-arraylist_time = []
-linkedlist_time = []
-
-with open('heap-ordenado-results.csv', newline='', encoding='utf-8-sig') as csvfile:
-    reader = csv.DictReader(csvfile)
-    reader.fieldnames = [f.strip() for f in reader.fieldnames]
-
-    for row in reader:
-        sizes.append(int(row['size']))
-        array_time.append(float(row['array_time']))
-        arraylist_time.append(float(row['arraylist_time']))
-        linkedlist_time.append(float(row['linkedlist_time']))
-
-plt.figure()
-
-plt.plot(sizes, array_time, label='Array')
-plt.plot(sizes, arraylist_time, label='ArrayList')
-plt.plot(sizes, linkedlist_time, label='LinkedList')
-
-plt.xlabel('Tamaño (n)')
-plt.ylabel('Tiempo (segundos)')
-plt.title('HeapSort - Caso Ordenado')
-plt.legend()
-plt.grid()
-
-plt.savefig('grafico_heap_ordenado.png', dpi=300)
-
-plt.show()
-```
-
----
-
-# 🧠 Interpretación del caso ordenado
-
-Este es el escenario “más aburrido” para muchos algoritmos… pero útil para medir estabilidad.
-
----
-
-## 1. 📈 Forma general
-
-* Curvas suaves
-* Crecimiento estable
-* Sin saltos raros
-
-👉 Traducción:
-
-> HeapSort no se beneficia ni se perjudica significativamente por estar ordenado.
-
----
-
-## 2. ⚖️ Comparación entre estructuras
-
-En tamaños grandes:
-
-| Estructura | Rendimiento          |
-| ---------- | -------------------- |
-| ArrayList  | 🥇 ligeramente mejor |
-| Array      | 🥈 muy cerca         |
-| LinkedList | 🥉 más lento         |
-
-Diferencias:
-
-* pequeñas pero consistentes
-* LinkedList pierde más a medida que crece n
-
----
-
-## 3. 🧠 Comparación con otros casos (clave del informe)
-
-Ahora viene lo importante de verdad:
-
-### 🔹 Ordenado vs Invertido vs Aleatorio
-
-HeapSort:
-
-| Caso      | Impacto    |
-| --------- | ---------- |
-| Aleatorio | baseline   |
-| Invertido | casi igual |
-| Ordenado  | casi igual |
-
-👉 Conclusión fuerte:
-
-> HeapSort es prácticamente **insensible al orden de entrada**
-
----
-
-## 4. 🔬 Qué está pasando realmente
-
-HeapSort hace siempre:
-
-* construir heap
-* extraer máximo repetidamente
-
-Eso significa:
-
-* no “aprovecha” orden previo
-* rehace estructura desde cero
-
----
-
-## 5. 📉 Por qué LinkedList pierde otra vez
-
-Se repite el patrón:
-
-* acceso por índice lento
-* heap necesita acceso constante a posiciones
-
-👉 Resultado:
-
-> penalización acumulada con tamaños grandes
-
----
-
-# 🧾 Conclusión lista para informe
-
-Podés usar algo así:
-
-> En el caso de entrada ordenada, HeapSort mantiene un comportamiento estable y consistente con una complejidad O(n log n), sin mejoras significativas respecto a los casos aleatorio o invertido. Esto confirma que el algoritmo no aprovecha el orden inicial de los datos, ya que siempre reconstruye la estructura de heap desde cero. En cuanto a las estructuras de datos, Array y ArrayList presentan rendimientos similares, mientras que LinkedList muestra un desempeño inferior debido al costo de acceso por índice.
-
----
-
-# 🧩 Conclusión global (los 3 casos juntos)
-
-Si juntás todo:
-
-* Aleatorio → baseline
-* Invertido → casi igual
-* Ordenado → casi igual
-
-👉 Mensaje final:
-
-> HeapSort es estable en rendimiento frente al orden de entrada, pero depende fuertemente del tipo de estructura utilizada.
-
----
-
-Si querés, el siguiente paso interesante sería:
-
-* hacer una **gráfica comparativa de los 3 casos en una sola figura**
-* o calcular **promedios y porcentajes de diferencia automáticamente**
-
-Ahí ya pasás de “gráficas” a “análisis de laboratorio serio”.
+* **Array > ArrayList >> LinkedList**
+* HeapSort prioriza **garantía sobre velocidad máxima**
