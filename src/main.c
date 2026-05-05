@@ -2,15 +2,28 @@
 #include <stdlib.h>
 #include <time.h>
 #include "listas.h"
-#include "heapSort.h"
+
+int benchmark_radix_sort();
 
 int main() {
-    /* Inicializar generador de números aleatorios */
+    int mode;
+    printf("1 = normal | 2 = radix test\n");
+    scanf("%d", &mode);
+
+    if (mode == 2) {
+        return benchmark_radix_sort();
+    }
+
+    return 0;
+}
+/*
+int main() {
+    // Inicializar generador de números aleatorios
     srand((unsigned int)time(NULL));
 
-    /* ===========================
+     ===========================
        TEST ARRAY LIST
-       =========================== */
+       =========================== 
     printf("=== ArrayList ===\n");
 
     ArrayList *arr = arraylist_create(2); // Capacidad inicial pequeña para forzar resize
@@ -38,9 +51,9 @@ int main() {
 
     arraylist_free(arr);
 
-    /* ===========================
+        ===========================
        TEST LINKED LIST
-       =========================== */
+       =========================== 
     printf("\n=== LinkedList ===\n");
 
     LinkedList *list = linkedlist_create();
@@ -67,3 +80,4 @@ int main() {
 
     return 0;
 }
+*/

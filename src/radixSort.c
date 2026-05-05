@@ -1,7 +1,13 @@
 #include "radixSort.h"
+#include <stdlib.h>
 
-// Obtiene el valor maximo dentro de un array
-int getMax(int arr[], int n) {
+
+/* ==========================
+    AUXILIARES ARRAY
+   ========================== */
+
+// Obtiene el valor numero de un array
+int getMaxA(int arr[], int n) {
     int max = arr[0];
     for (int i = 1; i < n;i++) {
         if (arr[i] > max) {
@@ -42,12 +48,99 @@ void countingSort(int arr[], int n, int exp) {
     free(output);
 }
 
+/* ===================
+    RADIX SORT ARRAY
+   =================== */
 
-void radixSort(int arr[], int n) {
-    int max = getMax(arr, n);
+void radixSortArray(int arr[], int n) {
+    if (n <= 1) return;
+
+    int max = getMaxA(arr, n);
 
     // Aplicar countingSort para cada digito
     for (int exp = 1; (max /exp) > 0; exp *= 10) {
     	countingSort(arr, n, exp);
+    }
+}
+
+
+/* =======================
+    RADIX SORT ARRAYLIST
+   ======================= */
+void radixSortArrayList(ArrayList* list, int n) {
+    NOT_NULL(list);
+
+    if (n <= 1) return;
+
+    radixSortArray(list->data, n);
+}
+
+
+/* ======================
+   RADIX SORT LINKEDLIST
+   ====================== */
+
+int getMaxL(Nodo* head) {
+    int max = head->value;
+
+    while( head != NULL) {
+        if ( head->value > max ) {
+            max = head->value;
+        }
+        head = head->next;
+    }
+    return max;
+}
+
+void enqueue(Nodo** head, Nodo** tail, int value) {
+    Nodo* new_nodo = nodo_create(value);
+
+    if (*head == NULL) {
+        *head = new_nodo;
+    } else {
+        (*tail)->next = new_nodo;
+    }
+    *tail = new_nodo;
+}
+
+
+void radixSortLinkedList(LinkedList* list){
+    NOT_NULL(list);
+
+    if( list->size <= 1) return;
+
+    int max = getMaxL(list->head);
+
+    for (int exp = 1;  (max / exp) > 0; exp *= 10) {
+
+        Nodo* buckets[10] = {NULL};
+        Nodo* tails[10] = {NULL};
+
+        Nodo* curr = list->head;
+
+        // Distribuir en buckets
+        while (curr != NULL) {
+            int digit = (curr->value / exp) % 10;
+
+            enqueue(&buckets[digit], &tails[digit], curr->value);
+
+            Nodo* temp = curr;
+            curr = curr->next;
+            free(temp);
+        }
+
+        list->head = NULL;
+        list->tail = NULL;
+
+        for (int i = 0; i < 10; i++) {
+            if(buckets[i] != 0) {
+                if(list->head == NULL) {
+                    list->head = buckets[i];
+                } else {
+                    list->tail->next = buckets[i];
+                }
+                list->tail = buckets[i];
+            }
+        }
     }
 }

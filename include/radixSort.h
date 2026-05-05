@@ -1,10 +1,33 @@
-#include <stdlib.h>
+#ifndef RADIXSORT_H
+#define RADIXSORT_H
 
-// Funcion para obtener el valor maximo del arreglo
-int getMax(int arr[], int n);
+#include "listas.h"
+
+/* =======================
+	ARRAY y ARRAY LIST
+   ======================= */
+// Funcion para obtener el valor maximo del Array o Array List
+int getMaxA(int arr[], int n);
 
 // CountingSort basado en el digito actual
 void countingSort(int arr[], int n, int exp);
 
-// Funcion principal Radix Sort
-void radixSort(int arr[], int n);
+// Funcion Radix Sort Array
+void radixSortArray(int arr[], int n);
+
+// Funcion Radix Sort ArrayList
+void radixSortArrayList(ArrayList* list, int n);
+
+/* =============
+	LINKED LIST
+   ============= */
+// Funcion para obtener el valor maximo de la Linked List
+int getMaxL(Nodo* head);
+
+// Funcion para encolar
+void enqueue(Nodo** head, Nodo** tail, int value);
+
+// Funcion Radix Sort LinkedList
+void radixSortLinkedList(LinkedList* list);
+
+#endif
