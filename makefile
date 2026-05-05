@@ -1,30 +1,40 @@
-# ===== Config =====
 CC = gcc
-CFLAGS = -Wall -Wextra -Iinclude -g
-OPT = -O2
+CFLAGS = -Wall -Wextra -Iinclude -g -O2
 
 SRC_DIR = src
 OBJ_DIR = obj
 
-# ===== Targets =====
-.PHONY: all clean test_heap test_radix
+BASE_SRCS = src/listas.c src/util.c
 
-# ===== Ejecutable principal (sin tests) =====
-MAIN_SRCS = src/main.c src/listas.c src/heapSort.c src/radixSort.c src/util.c
+HEAP_SRCS = src/heapSort.c src/test_HeapSort.c
+RADIX_SRCS = src/radixSort.c src/test_RadixSort.c src/main.c
+MAIN_SRCS = src/main.c
 
-programa.exe: $(MAIN_SRCS)
+.PHONY: all clean test_heap test_radix run_main
+
+programa.exe: $(MAIN_SRCS) $(BASE_SRCS) $(HEAP_SRCS) $(RADIX_SRCS)
 	$(CC) $(CFLAGS) $^ -o $@
 
 all: programa.exe
 
-# ===== Heap test =====
-HEAP_SRCS = src/test_HeapSort.c src/listas.c src/heapSort.c src/util.c
-
-test_heap: clean
-	@echo "Compilando test de HeapSort..."
-	$(CC) $(CFLAGS) $(OPT) $(HEAP_SRCS) -o test_heap.exe
+test_heap: $(BASE_SRCS) $(HEAP_SRCS)
+	@echo ">>> Compilando pruebas de HeapSort..."
+	$(CC) $(CFLAGS) $(HEAP_SRCS) $(BASE_SRCS) -o test_heap.exe
+	@echo ">>> Ejecutando test_heap.exe..."
 	./test_heap.exe
 
-# ===== Limpieza =====
+test_radix: $(BASE_SRCS) $(RADIX_SRCS)
+	@echo ">>> Compilando pruebas de RadixSort..."
+	$(CC) $(CFLAGS) $(RADIX_SRCS) $(BASE_SRCS) -o test_radix.exe
+	@echo ">>> Ejecutando test_radix.exe..."
+	./test_radix.exe
+
+run_main: programa.exe
+	@echo ">>> Ejecutando programa principal (main.c)..."
+	./programa.exe
+
 clean:
-	rm -rf obj *.exe
+	rm -f *.exe
+	rm -rf obj
+	rm -f *.csv
+	@echo "Limpieza completada."
