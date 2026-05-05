@@ -1,2 +1,8 @@
-void generarAleatorio(int arr[], int n);
-void probarAlgoritmo(void (*sort)(int[], int), int arr[], int n, char* nombre);
+#ifndef UTIL_H
+#define UTIL_H
+
+void generateRandom(int arr[], int n);
+void generateSorted(int arr[], int n);
+void generateReversed(int arr[], int n);
+
+#endif

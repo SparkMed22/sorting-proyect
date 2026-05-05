@@ -2,16 +2,20 @@
 #include <stdlib.h>
 #include <time.h>
 #include "listas.h"
+#include "test_RadixSort.h"
 
-int benchmark_radix_sort();
 
 int main() {
     int mode;
-    printf("1 = normal | 2 = radix test\n");
+    printf("1 = random | 2 = sorted | 3 = reversed\n");
     scanf("%d", &mode);
 
-    if (mode == 2) {
-        return benchmark_radix_sort();
+    if (mode == 1) {
+        return radix_sort_random();
+    } else if (mode == 2) {
+        return radix_sort_sorted();
+    } else {
+        return radix_sort_reversed();
     }
 
     return 0;
