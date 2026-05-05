@@ -7,8 +7,8 @@
 #include "util.h"
 
 // Tamaños de prueba definidos según tus implementaciones previas
-static int sizes[] = {100, 1000, 5000, 10000, 50000, 100000, 500000, 1000000};
-static int num_sizes = 8;
+static int sizes[] = {100, 1000, 5000, 10000, 50000, 100000, 500000, 1000000,2000000};
+static int num_sizes = 9;
 
 void ejecutar_comparativa(const char* nombre_archivo, int tipo_dato) {
     FILE *file = fopen(nombre_archivo, "w");
