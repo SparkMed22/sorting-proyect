@@ -1,47 +1,248 @@
-1. Objetivo
+# 📊 **Informe Técnico: RadixSort**
 
-El objetivo de esta practica fue comparar el rendimiento de RadixSort al trabajar con 3 estructuras de datos distintas: Array, ArrayList y LinkedList.
-Se buscó analizar como influye la organización de memoria, el acceso a los elementos y el costo de insercción sobre el tiempo de ejecucion del algoritmo
+**RadixSort** es un algoritmo de ordenamiento **no comparativo** que organiza los elementos procesando sus dígitos individuales. Generalmente trabaja de **menor a mayor significancia (LSD: Least Significant Digit)**.
 
-Se ejecutó RadixSort sobre un conjunto de datos aleatorios con tamaños crecientes.
-Para cada tamaño n, se midió el tiempo de ordenamiento en:
-- Array
-- ArrayList
-- LinkedList
+Su funcionamiento se basa en distribuir los elementos en **estructuras auxiliares (buckets)** según el valor de cada dígito, para luego reconstruir la secuencia ordenada. Este proceso se repite por cada posición del número.
 
-Es importante que, para que la comparación sea válida, las tres estructuras trabajen sobre la misma secuencia base de datos o, al menos, sobre datos generados con el mismo criterio y distribución.
+Conceptualmente, puede interpretarse como una serie de ordenamientos parciales que progresivamente construyen el orden final.
 
-Resultados
-size, 		array_time, arraylist_time,	linkedlist_time
-100, 		0.000066, 	0.000054, 		0.000031
-500, 		0.000275, 	0.000266, 		0.000105
-1000, 		0.000506, 	0.000486, 		0.000194
-2000, 		0.000987, 	0.000958, 		0.000369
-5000, 		0.001811, 	0.001328, 		0.000496
-10000, 		0.002487, 	0.002564, 		0.000961
-20000, 		0.005077, 	0.005207, 		0.002337
-50000, 		0.013078, 	0.012768, 		0.005305
-100000, 	0.025557, 	0.026514, 		0.010729
-200000, 	0.052892, 	0.051181, 		0.021386
-500000, 	0.132109, 	0.128786, 		0.053921
-1000000,	0.252031, 	0.265034, 		0.106050
-2000000,	0.515687, 	0.508282, 		0.212911
+---
 
+## 🔢 **Implementaciones y Comparativa**
 
-Los datos muestran un comportamiento muy claro: LinkedList fue la estructura más rápida en todos los tamaños medidos.
-Además, la diferencia entre Array y ArrayList se vuelve más marcada conforme crece n.
+### 🔹 RadixSort con Array
 
-Algunas observaciones
-1. Array y ArrayList presentan tiempos similares
-  - Esto es esperable ya que ambas estructuras manejan memoria contigua o casi contigua y tienen accesso 
-2. LinkedList tiene mejores tiempos en radixSort
-  - Esto sugiere que la implementación de RadixSort utilizada favorece operaciones de inserción
-3- El crecimiento del tiempo es aproximadamente lineal
-  - Esto es coherente con RadixSort, cuya complejidad práctica suele aproximarse a:
-    O(n⋅k)
-    donde k es la cantidad de dígitos del número mayor. 
+**Características:**
 
+* Acceso aleatorio en tiempo constante (O(1))
+* Memoria contigua
+* Uso típico de estructuras auxiliares (conteo o buckets)
 
-Conclusión
-Los resultados experimentales indican que, para esta implementación de Radix Sort, el LinkedList fur la estructura más eficiente en todos los tamaños analizados.
-Array y ArrayList obtuvieron tiempos muy parecidos entre sí, pero consientemente mayores que LinkedList
+**Ventajas:**
+
+* Buen rendimiento general
+* Excelente localidad de memoria
+* Implementación eficiente
+
+**Desventajas:**
+
+* Requiere estructuras auxiliares adicionales
+* Posibles costos de copia entre arrays
+
+**Conclusión:**
+Es una implementación **eficiente y estándar**, aunque puede verse afectada por movimientos de datos entre estructuras auxiliares.
+
+---
+
+### 🔹 RadixSort con ArrayList
+
+**Características:**
+
+* Basado internamente en arrays
+* Acceso aleatorio (O(1))
+
+**Ventajas:**
+
+* Flexibilidad en tamaño
+* Código más abstracto y manejable
+
+**Desventajas:**
+
+* Ligera sobrecarga por gestión dinámica
+* Redimensionamientos ocasionales
+
+**Conclusión:**
+Presenta un rendimiento **muy cercano al array**, con una pequeña penalización por abstracción.
+
+---
+
+### 🔹 RadixSort con LinkedList
+
+**Características:**
+
+* Inserciones y eliminaciones en O(1)
+* Memoria no contigua
+* Acceso secuencial
+
+**Ventajas:**
+
+* Inserciones extremadamente eficientes (clave en RadixSort)
+* Ideal para implementación basada en buckets dinámicos
+
+**Desventajas:**
+
+* Baja localidad de memoria
+* Mayor uso de memoria por nodos
+
+**Conclusión:**
+A diferencia de HeapSort, **LinkedList puede ser altamente eficiente en RadixSort**, dependiendo de la implementación.
+
+---
+
+## 📊 **Complejidad Algorítmica**
+
+La complejidad de RadixSort es:
+
+[
+O(n \cdot k)
+]
+
+Donde:
+
+* (n): número de elementos
+* (k): cantidad de dígitos del número mayor
+
+### Resultado:
+
+* Mejor caso: (O(n \cdot k))
+* Caso promedio: (O(n \cdot k))
+* Peor caso: (O(n \cdot k))
+
+**Conclusión:**
+RadixSort presenta un comportamiento **lineal respecto a n**, si (k) es constante.
+
+---
+
+## 🧪 **Resultados de Laboratorio**
+
+### 📌 Datos Aleatorios
+
+* LinkedList presenta el mejor rendimiento en todos los tamaños
+* Array y ArrayList tienen tiempos similares
+
+Ejemplo destacado:
+
+| Size      | Array    | ArrayList | LinkedList |
+| --------- | -------- | --------- | ---------- |
+| 100,000   | 0.017283 | 0.015910  | 0.009412   |
+| 1,000,000 | 0.178901 | 0.171203  | 0.088089   |
+| 2,000,000 | 0.340396 | 0.329797  | 0.177190   |
+
+---
+
+### 📌 Datos Invertidos
+
+* Comportamiento prácticamente idéntico al caso aleatorio
+* LinkedList sigue siendo superior
+
+Ejemplo:
+
+| Size      | Array    | ArrayList | LinkedList |
+| --------- | -------- | --------- | ---------- |
+| 1,000,000 | 0.244171 | 0.243705  | 0.087714   |
+| 2,000,000 | 0.495269 | 0.493742  | 0.177155   |
+
+---
+
+### 📌 Datos Ordenados
+
+* No hay mejora significativa
+* El algoritmo no depende del orden inicial
+
+Ejemplo:
+
+| Size      | Array    | ArrayList | LinkedList |
+| --------- | -------- | --------- | ---------- |
+| 1,000,000 | 0.220604 | 0.217243  | 0.101364   |
+| 2,000,000 | 0.491179 | 0.499475  | 0.197653   |
+
+---
+
+## 📈 **Análisis de Resultados**
+
+### 🟡 Observación 1: LinkedList es más rápido
+
+A diferencia de HeapSort, este resultado **sí es coherente con RadixSort**, porque:
+
+✔ El algoritmo realiza muchas inserciones en buckets
+✔ LinkedList permite inserciones en (O(1))
+✔ No requiere desplazamiento de elementos
+
+👉 Resultado: ventaja clara para LinkedList
+
+---
+
+### 🟡 Observación 2: Array vs ArrayList
+
+* Comportamiento muy similar
+* Diferencias leves al crecer (n)
+
+👉 Explicación:
+
+* Overhead de ArrayList
+* Posibles redimensionamientos
+
+---
+
+### 🟡 Observación 3: Independencia del orden
+
+* Aleatorio, ordenado e invertido → resultados similares
+
+👉 Confirma que RadixSort:
+
+✔ No depende del orden inicial
+✔ Mantiene comportamiento uniforme
+
+---
+
+### 🟡 Observación 4: Escalabilidad
+
+Los tiempos crecen de forma aproximadamente:
+
+[
+O(n)
+]
+
+✔ Totalmente consistente con RadixSort
+
+---
+
+## ⚠️ **Discusión Técnica**
+
+El rendimiento de RadixSort depende fuertemente de **cómo se implementan los buckets**:
+
+* **Array:** requiere copiar datos entre estructuras
+* **ArrayList:** similar al array, con leve overhead
+* **LinkedList:** permite construir buckets dinámicos sin copias costosas
+
+👉 Esto explica por qué:
+
+> LinkedList supera a Array en esta implementación
+
+---
+
+## 🧠 **Conclusión General**
+
+RadixSort es un algoritmo:
+
+* **Eficiente:** cercano a lineal
+* **Consistente:** independiente del input
+* **Flexible:** adaptable a distintas estructuras
+
+Sin embargo:
+
+* Depende fuertemente de la implementación
+* Puede consumir memoria adicional
+* No siempre supera a algoritmos comparativos en práctica
+
+---
+
+## 🎯 **Síntesis Final**
+
+```text
+RadixSort (según resultados experimentales):
+
+LinkedList > Array ≈ ArrayList
+```
+
+---
+
+## 🎓 **Conclusión Final de la Práctica**
+
+* La estructura de datos influye directamente en el rendimiento
+* En RadixSort, las operaciones de inserción son críticas
+* LinkedList puede ser la mejor opción si el algoritmo está orientado a buckets dinámicos
+
+👉 Idea clave:
+
+> “En algoritmos no comparativos como RadixSort, la eficiencia no depende solo del acceso, sino del costo de reorganización de los datos.”
