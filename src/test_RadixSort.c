@@ -88,7 +88,7 @@ int radix_sort_random() {
         }
 
         start = clock();
-        radixSortLinkedList(list);
+        radixSortLinkedList(list, n);
         end = clock();
 
         double time_linkedList = (double)(end - start) / CLOCKS_PER_SEC;
@@ -176,7 +176,7 @@ int radix_sort_sorted() {
         }
 
         start = clock();
-        radixSortLinkedList(list);
+        radixSortLinkedList(list, n);
         end = clock();
 
         double time_linkedList = (double)(end - start) / CLOCKS_PER_SEC;
@@ -264,7 +264,7 @@ int radix_sort_reversed() {
         }
 
         start = clock();
-        radixSortLinkedList(list);
+        radixSortLinkedList(list, n);
         end = clock();
 
         double time_linkedList = (double)(end - start) / CLOCKS_PER_SEC;

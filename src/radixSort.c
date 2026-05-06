@@ -104,10 +104,10 @@ void enqueue(Nodo** head, Nodo** tail, int value) {
 }
 
 
-void radixSortLinkedList(LinkedList* list){
+void radixSortLinkedList(LinkedList* list, int n){
     NOT_NULL(list);
 
-    if( list->size <= 1) return;
+    if( n <= 1) return;
 
     int max = getMaxL(list->head);
 

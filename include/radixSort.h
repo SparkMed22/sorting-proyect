@@ -28,6 +28,6 @@ int getMaxL(Nodo* head);
 void enqueue(Nodo** head, Nodo** tail, int value);
 
 // Funcion Radix Sort LinkedList
-void radixSortLinkedList(LinkedList* list);
+void radixSortLinkedList(LinkedList* list, int n);
 
 #endif
