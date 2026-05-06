@@ -26,7 +26,7 @@ void countingSort(int arr[], int n, int exp) {
     // Contar ocurrencias de cada digito
     for (int i = 0; i < n; i++) {
         int digit = (arr[i] / exp) % 10;
-	count[digit]++;
+	   count[digit]++;
     }
 
     // Convertir count[] en posiciones acumuladas
@@ -37,7 +37,7 @@ void countingSort(int arr[], int n, int exp) {
     // Construir el arreglo ordenado (recorrer alrevez para estabilidad)
     for (int i = n - 1; i >= 0; i--) {
         int digit = (arr[i] / exp) % 10;
-	output[count[digit] - 1] = arr[i];
+        output[count[digit] - 1] = arr[i];
     	count[digit]--;
     }
 
