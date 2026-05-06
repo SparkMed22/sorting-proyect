@@ -1,4 +1,4 @@
-# 📊 **Informe Técnico: RadixSort**
+# **Informe Técnico: RadixSort**
 
 **RadixSort** es un algoritmo de ordenamiento **no comparativo** que organiza los elementos procesando sus dígitos individuales. Generalmente trabaja de **menor a mayor significancia (LSD: Least Significant Digit)**.
 
@@ -8,7 +8,7 @@ Conceptualmente, puede interpretarse como una serie de ordenamientos parciales q
 
 ---
 
-## 🔢 **Implementaciones y Comparativa**
+## **Implementaciones y Comparativa**
 
 ### 🔹 RadixSort con Array
 
@@ -56,7 +56,7 @@ Presenta un rendimiento **muy cercano al array**, con una pequeña penalización
 
 ---
 
-### 🔹 RadixSort con LinkedList
+### RadixSort con LinkedList
 
 **Características:**
 
@@ -79,7 +79,7 @@ A diferencia de HeapSort, **LinkedList puede ser altamente eficiente en RadixSor
 
 ---
 
-## 📊 **Complejidad Algorítmica**
+## **Complejidad Algorítmica**
 
 La complejidad de RadixSort es:
 
@@ -103,9 +103,9 @@ RadixSort presenta un comportamiento **lineal respecto a n**, si (k) es constant
 
 ---
 
-## 🧪 **Resultados de Laboratorio**
+## **Resultados de Laboratorio**
 
-### 📌 Datos Aleatorios
+### Datos Aleatorios
 
 * LinkedList presenta el mejor rendimiento en todos los tamaños
 * Array y ArrayList tienen tiempos similares
@@ -120,7 +120,7 @@ Ejemplo destacado:
 
 ---
 
-### 📌 Datos Invertidos
+### Datos Invertidos
 
 * Comportamiento prácticamente idéntico al caso aleatorio
 * LinkedList sigue siendo superior
@@ -134,7 +134,7 @@ Ejemplo:
 
 ---
 
-### 📌 Datos Ordenados
+### Datos Ordenados
 
 * No hay mejora significativa
 * El algoritmo no depende del orden inicial
@@ -148,9 +148,9 @@ Ejemplo:
 
 ---
 
-## 📈 **Análisis de Resultados**
+## **Análisis de Resultados**
 
-### 🟡 Observación 1: LinkedList es más rápido
+### Observación 1: LinkedList es más rápido
 
 A diferencia de HeapSort, este resultado **sí es coherente con RadixSort**, porque:
 
@@ -162,19 +162,19 @@ A diferencia de HeapSort, este resultado **sí es coherente con RadixSort**, por
 
 ---
 
-### 🟡 Observación 2: Array vs ArrayList
+### Observación 2: Array vs ArrayList
 
 * Comportamiento muy similar
 * Diferencias leves al crecer (n)
 
-👉 Explicación:
+Explicación:
 
 * Overhead de ArrayList
 * Posibles redimensionamientos
 
 ---
 
-### 🟡 Observación 3: Independencia del orden
+### Observación 3: Independencia del orden
 
 * Aleatorio, ordenado e invertido → resultados similares
 
@@ -185,7 +185,7 @@ A diferencia de HeapSort, este resultado **sí es coherente con RadixSort**, por
 
 ---
 
-### 🟡 Observación 4: Escalabilidad
+### Observación 4: Escalabilidad
 
 Los tiempos crecen de forma aproximadamente:
 
@@ -197,7 +197,7 @@ O(n)
 
 ---
 
-## ⚠️ **Discusión Técnica**
+## **Discusión Técnica**
 
 El rendimiento de RadixSort depende fuertemente de **cómo se implementan los buckets**:
 
@@ -205,13 +205,13 @@ El rendimiento de RadixSort depende fuertemente de **cómo se implementan los bu
 * **ArrayList:** similar al array, con leve overhead
 * **LinkedList:** permite construir buckets dinámicos sin copias costosas
 
-👉 Esto explica por qué:
+Esto explica por qué:
 
 > LinkedList supera a Array en esta implementación
 
 ---
 
-## 🧠 **Conclusión General**
+## **Conclusión General**
 
 RadixSort es un algoritmo:
 
@@ -227,7 +227,7 @@ Sin embargo:
 
 ---
 
-## 🎯 **Síntesis Final**
+## **Síntesis Final**
 
 ```text
 RadixSort (según resultados experimentales):
@@ -237,12 +237,8 @@ LinkedList > Array ≈ ArrayList
 
 ---
 
-## 🎓 **Conclusión Final de la Práctica**
+## **Conclusión Final de la Práctica**
 
 * La estructura de datos influye directamente en el rendimiento
 * En RadixSort, las operaciones de inserción son críticas
 * LinkedList puede ser la mejor opción si el algoritmo está orientado a buckets dinámicos
-
-👉 Idea clave:
-
-> “En algoritmos no comparativos como RadixSort, la eficiencia no depende solo del acceso, sino del costo de reorganización de los datos.”
