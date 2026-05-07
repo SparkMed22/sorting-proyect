@@ -6,34 +6,42 @@ OBJ_DIR = obj
 
 BASE_SRCS = src/listas.c src/util.c
 
-HEAP_SRCS = src/heapSort.c src/test_HeapSort.c
-RADIX_SRCS = src/radixSort.c src/test_RadixSort.c 
+HEAP_SRCS = src/heapSort.c src/lab_HeapSort.c
+RADIX_SRCS = src/radixSort.c src/lab_RadixSort.c
+QUICK_SRCS = src/quickSort.c src/lab_QuickSort.c 
 MAIN_SRCS = src/main.c  src/heapSort.c src/radixSort.c
 
-.PHONY: all clean test_heap test_radix run_main
+.PHONY: all clean lab_heap lab_radix run_main
 
 programa.exe: $(MAIN_SRCS) $(BASE_SRCS)
 	$(CC) $(CFLAGS) $^ -o $@
 
 all: programa.exe
 
-test_heap: $(BASE_SRCS) $(HEAP_SRCS)
+lab_heap: $(BASE_SRCS) $(HEAP_SRCS)
 	@echo ">>> Compilando pruebas de HeapSort..."
-	$(CC) $(CFLAGS) $(HEAP_SRCS) $(BASE_SRCS) -o test_heap.exe
-	@echo ">>> Ejecutando test_heap.exe..."
-	./test_heap.exe
+	$(CC) $(CFLAGS) $(HEAP_SRCS) $(BASE_SRCS) -o lab_heap.exe
+	@echo ">>> Ejecutando lab_heap.exe..."
+	./lab_heap.exe
 
-test_radix: $(BASE_SRCS) $(RADIX_SRCS)
+lab_radix: $(BASE_SRCS) $(RADIX_SRCS)
 	@echo ">>> Compilando pruebas de RadixSort..."
-	$(CC) $(CFLAGS) $(RADIX_SRCS) $(BASE_SRCS) -o test_radix.exe
-	@echo ">>> Ejecutando test_radix.exe..."
-	./test_radix.exe
+	$(CC) $(CFLAGS) $(RADIX_SRCS) $(BASE_SRCS) -o lab_radix.exe
+	@echo ">>> Ejecutando lab_radix.exe..."
+	./lab_radix.exe
+
+lab_Quick: $(BASE_SRCS) $(QUICK_SRCS)
+	@echo ">>> Compilando pruebas de QuickSort..."
+	$(CC) $(CFLAGS) $(QUICK_SRCS) $(BASE_SRCS) -o lab_Quick.exe
+	@echo ">>> Ejecutando lab_Quick.exe..."
+	./lab_Quick.exe
+
 
 run_main: programa.exe
 	@echo ">>> Ejecutando programa principal (main.c)..."
 	./programa.exe
 
-clean:
+clear:
 	rm -f *.exe
 	rm -rf obj
 	rm -f *.csv

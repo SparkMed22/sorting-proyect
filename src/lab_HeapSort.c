@@ -4,7 +4,7 @@
 
 #include "listas.h"
 #include "heapSort.h"
-#include "test_HeapSort.h"
+#include "lab_HeapSort.h"
 #include "util.h"
 
 static int sizes[] = {

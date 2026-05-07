@@ -9,7 +9,7 @@
 #include "listas.h"
 #include "radixSort.h"
 #include "util.h"
-#include "test_RadixSort.h"
+#include "lab_RadixSort.h"
 
 int sizes[] = {
     100,       // Micro: Sobrecarga de inicialización
