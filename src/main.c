@@ -54,7 +54,7 @@ void ejecutar_comparativa(const char* nombre_archivo, int tipo_dato) {
         LinkedList *list_radix = linkedlist_create();
         for(int j=0; j<n; j++) linkedlist_add(list_radix, base[j]);
         start = clock();
-        radixSortLinkedList(list_radix);
+        radixSortLinkedList(list_radix,n);
         double t_radix_ll = (double)(clock() - start) / CLOCKS_PER_SEC;
 
         // Guardar y mostrar resultados
