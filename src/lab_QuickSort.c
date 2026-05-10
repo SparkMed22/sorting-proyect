@@ -4,6 +4,6 @@
 #include <time.h>
 
 #include "listas.h" // Las estructuras para probar
-#include "heapSort.h"
+#include "quickSort.h"
 #include "lab_QuickSort.h" // -> Tu  implementacion 
 #include "util.h"
