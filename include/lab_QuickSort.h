@@ -1,4 +1,10 @@
-/**
- * Tu Codigo Gonza podes usar los otros archivos como referencia 
- *  lab_QuickSort.h
- */ 
+#ifndef LAB_QUICKSORT_H
+#define LAB_QUICKSORT_H
+
+#include "listas.h"
+
+int quick_sort_random(void);
+int quick_sort_sorted(void);
+int quick_sort_reversed(void);
+
+#endif
