@@ -109,4 +109,3 @@ void quickSortLinkedList(LinkedList *list, int cant) {
 
     free(temp);
 }
-
