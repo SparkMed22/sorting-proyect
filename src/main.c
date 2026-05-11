@@ -4,13 +4,11 @@
 #include "listas.h"
 #include "heapSort.h"
 #include "radixSort.h"
+#include "quickSort.h"
 #include "util.h"
 
-#include "quickSort.h" 
-
-
 // Tamaños de prueba definidos según tus implementaciones previas
-static int sizes[] = {100, 1000, 5000, 10000, 50000, 100000, 500000, 1000000,2000000};
+static int sizes[] = {100, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 2000000};
 static int num_sizes = 9;
 
 void ejecutar_comparativa(const char* nombre_archivo, int tipo_dato) {
@@ -20,14 +18,13 @@ void ejecutar_comparativa(const char* nombre_archivo, int tipo_dato) {
         return;
     }
 
-    //Se añadio quick_array y quick_linkedlist
     fprintf(file, "size,heap_array,radix_array,quick_array,heap_linkedlist,radix_linkedlist,quick_linkedlist\n");
     printf("\n--- Comparativa: %s ---\n", nombre_archivo);
 
     for (int i = 0; i < num_sizes; i++) {
         int n = sizes[i];
         int *base = malloc(n * sizeof(int));
-        
+
         // Generación de datos
         if (tipo_dato == 1) generateRandom(base, n);
         else if (tipo_dato == 2) generateSorted(base, n);
@@ -65,7 +62,7 @@ void ejecutar_comparativa(const char* nombre_archivo, int tipo_dato) {
         LinkedList *list_radix = linkedlist_create();
         for(int j=0; j<n; j++) linkedlist_add(list_radix, base[j]);
         start = clock();
-        radixSortLinkedList(list_radix,n);
+        radixSortLinkedList(list_radix, n);
         double t_radix_ll = (double)(clock() - start) / CLOCKS_PER_SEC;
 
         // --- Benchmark QuickSort (LinkedList) ---
@@ -76,8 +73,15 @@ void ejecutar_comparativa(const char* nombre_archivo, int tipo_dato) {
         double t_quick_ll = (double)(clock() - start) / CLOCKS_PER_SEC;
 
         // Guardar y mostrar resultados
-        fprintf(file, "%d, %f, %f, %f, %f\n", n, t_heap_arr, t_radix_arr, t_heap_ll, t_radix_ll);
-        printf("n=%7d | Heap: %f | Radix: %f (Array)\n", n, t_heap_arr, t_radix_arr);
+        fprintf(file, "%d, %f, %f, %f, %f, %f, %f\n",
+                n, t_heap_arr, t_radix_arr, t_quick_arr,
+                t_heap_ll, t_radix_ll, t_quick_ll);
+
+        printf("n=%7d | Heap: %f | Radix: %f | Quick: %f (Array)\n",
+               n, t_heap_arr, t_radix_arr, t_quick_arr);
+        printf("n=%7d | Heap: %f | Radix: %f | Quick: %f (LinkedList)\n",
+               n, t_heap_ll, t_radix_ll, t_quick_ll);
+        printf("-------------------------------------------------------------\n");
 
         // Liberar memoria para la siguiente iteración
         free(base);
@@ -88,12 +92,13 @@ void ejecutar_comparativa(const char* nombre_archivo, int tipo_dato) {
         linkedlist_free(list_radix);
         linkedlist_free(list_quick);
     }
+
     fclose(file);
 }
 
 int main() {
     srand((unsigned int)time(NULL));
-    
+
     // 1=Aleatorio, 2=Ordenado, 3=Invertido
     ejecutar_comparativa("vs-aleatorio.csv", 1);
     ejecutar_comparativa("vs-ordenado.csv", 2);
