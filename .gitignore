@@ -2,5 +2,6 @@ NotasFranHeap.md
 obj/
 *.exe
 *.csv
+*.py
 img/
 docs/

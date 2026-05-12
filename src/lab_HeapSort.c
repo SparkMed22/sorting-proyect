@@ -1,256 +1,144 @@
-/**
- * @file lab_HeapSort.c
- * @brief Benchmark del algoritmo Heap Sort para distintas estructuras.
- *
- * Evalúa el rendimiento de:
- * - Arrays
- * - ArrayList
- * - LinkedList
- *
- * Tipos de datos evaluados:
- * - Aleatorios
- * - Ordenados
- * - Invertidos
- *
- * Los resultados se exportan en formato CSV.
- *
- * @author Francisco Medina
- * @date 2026-05-12
- * @version 0.0.2
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
+// Simulación de las cabeceras del proyecto
 #include "heapSort.h"
 #include "lab_HeapSort.h"
 #include "util.h"
 #include "config.h"
 
+// Configuración del benchmark
+#define ITERACIONES_POR_PRUEBA 3
 
 static const int sizes[] = {
-    100,
-    500,
-    1000,
-    2000,
-    5000,
-    10000,
-    20000,
-    50000,
-    100000,
-    200000,
-    500000,
-    1000000,
-    2000000};
+    100, 500, 1000, 2000, 5000, 10000, 20000, 
+    50000, 100000, 200000, 500000, 1000000};
 
 static const int TOTAL_SIZES = sizeof(sizes) / sizeof(sizes[0]);
-
 
 typedef void (*GeneratorFunction)(int *, int);
 
 /**
- * @brief Copia un arreglo.
- *
- * @param dest Arreglo destino.
- * @param src  Arreglo origen.
- * @param n    Cantidad de elementos.
+ * @brief Dibuja una barra de progreso simple en la terminal.
  */
-static void copyArray(int *dest, const int *src, int n)
-{
-    for (int i = 0; i < n; i++)
-    {
-        dest[i] = src[i];
+void printProgress(int current, int total) {
+    int width = 20;
+    float progress = (float)current / total;
+    int pos = width * progress;
+
+    printf(WHITE "  Progreso: [" RESET);
+    for (int i = 0; i < width; ++i) {
+        if (i < pos) printf(CYAN "=" RESET);
+        else if (i == pos) printf(CYAN ">" RESET);
+        else printf(" ");
     }
+    printf(WHITE "] %d%%\r" RESET, (int)(progress * 100));
+    fflush(stdout);
 }
 
-/**
- * @brief Obtiene el tiempo de ejecución de HeapSort para arrays.
- *
- * @param data Arreglo a ordenar.
- * @param n    Cantidad de elementos.
- * @return Tiempo en segundos.
- */
-static double benchmarkArray(int *data, int n)
-{
+static void copyArray(int *dest, const int *src, int n) {
+    for (int i = 0; i < n; i++) dest[i] = src[i];
+}
+
+static double benchmarkArray(const int *data, int n) {
+    int *temp = malloc(sizeof(int) * n);
+    copyArray(temp, data, n);
+    
     clock_t start = clock();
-    heapSortArray(data, n);
+    heapSortArray(temp, n);
     clock_t end = clock();
+    
+    free(temp);
     return (double)(end - start) / CLOCKS_PER_SEC;
 }
 
-/**
- * @brief Obtiene el tiempo de ejecución de HeapSort para ArrayList.
- *
- * @param data Datos base.
- * @param n    Cantidad de elementos.
- * @return Tiempo en segundos.
- */
-static double benchmarkArrayList(const int *data, int n)
-{
+static double benchmarkArrayList(const int *data, int n) {
     ArrayList *list = arraylist_create(n);
-    for (int i = 0; i < n; i++) 
-        arraylist_push(list, data[i]);
+    for (int i = 0; i < n; i++) arraylist_push(list, data[i]);
     
     clock_t start = clock();
     heapSortArrayList(list, n);
     clock_t end = clock();
+    
     arraylist_free(list);
     return (double)(end - start) / CLOCKS_PER_SEC;
 }
 
-/**
- * @brief Obtiene el tiempo de ejecución de HeapSort para LinkedList.
- *
- * @param data Datos base.
- * @param n    Cantidad de elementos.
- * @return Tiempo en segundos.
- */
-static double benchmarkLinkedList(const int *data, int n)
-{
-
+static double benchmarkLinkedList(const int *data, int n) {
     LinkedList *list = linkedlist_create();
-
-    for (int i = 0; i < n; i++)
-    {
-        linkedlist_add(list, data[i]);
-    }
+    for (int i = 0; i < n; i++) linkedlist_add(list, data[i]);
 
     clock_t start = clock();
-
     heapSortLinkedList(list, n);
-
     clock_t end = clock();
 
     linkedlist_free(list);
-
     return (double)(end - start) / CLOCKS_PER_SEC;
 }
 
-/**
- * @brief Ejecuta un benchmark completo.
- *
- * @param title      Nombre descriptivo.
- * @param filename   Archivo CSV de salida.
- * @param generator  Función generadora de datos.
- *
- * @return 0 si todo salió correctamente.
- */
-static int runBenchmark(
-    const char *title,
-    const char *filename,
-    GeneratorFunction generator)
-{
-
+static int runBenchmark(const char *title, const char *filename, GeneratorFunction generator) {
     FILE *file = fopen(filename, "w");
-
-    if (!file)
-    {
-        printf(RED BOLD "\n[ERROR]" RESET RED
-                        " No se pudo crear el archivo %s\n" RESET,
-               filename);
+    if (!file) {
+        printf(RED "\n[ERROR] No se pudo crear %s\n" RESET, filename);
         return 1;
     }
 
     fprintf(file, "size,array_time,arraylist_time,linkedlist_time\n");
 
-    printf(BOLD CYAN "\n==================================================\n" RESET);
-    printf(BOLD BLUE " %s\n" RESET, title);
-    printf(BOLD CYAN "==================================================\n\n" RESET);
+    printf(BOLD CYAN "\n>> %s\n" RESET, title);
+    printf(BOLD WHITE "%-12s | %-12s | %-12s | %-12s\n" RESET, 
+           "Elementos", "Array (s)", "ArrayList(s)", "LinkedList(s)");
+    printf("-------------|--------------|--------------|--------------\n");
 
-    for (int s = 0; s < TOTAL_SIZES; s++)
-    {
-
+    for (int s = 0; s < TOTAL_SIZES; s++) {
         int n = sizes[s];
-
-        printf(YELLOW "[%2d/%2d]" RESET
-                      " Procesando %s%d%s elementos...\n",
-               s + 1,
-               TOTAL_SIZES,
-               CYAN,
-               n,
-               RESET);
-
         int *base = malloc(sizeof(int) * n);
-        int *array = malloc(sizeof(int) * n);
-
-        if (!base || !array)
-        {
-
-            printf(RED BOLD "\n[ERROR]" RESET RED
-                            " Memoria insuficiente para n=%d\n" RESET,
-                   n);
-
-            free(base);
-            free(array);
-            fclose(file);
-
-            return 1;
-        }
-
+        if (!base) return 1;
+        
         generator(base, n);
 
-        copyArray(array, base, n);
+        double tArr = 0, tAL = 0, tLL = 0;
 
-        double timeArray = benchmarkArray(array, n);
+        // Promediamos para mayor precisión
+        for (int i = 0; i < ITERACIONES_POR_PRUEBA; i++) {
+            printProgress(s + 1, TOTAL_SIZES);
+            tArr += benchmarkArray(base, n);
+            tAL  += benchmarkArrayList(base, n);
+            // Ojo: LinkedList puede ser muy lento en n grandes, podrías omitirlo en n > 100k
+            if (n <= 100000) tLL += benchmarkLinkedList(base, n); 
+        }
 
-        double timeArrayList = benchmarkArrayList(base, n);
+        tArr /= ITERACIONES_POR_PRUEBA;
+        tAL  /= ITERACIONES_POR_PRUEBA;
+        tLL  /= ITERACIONES_POR_PRUEBA;
 
-        double timeLinkedList = benchmarkLinkedList(base, n);
-
-        fprintf(file,
-                "%d,%f,%f,%f\n",
-                n,
-                timeArray,
-                timeArrayList,
-                timeLinkedList);
-
-        printf(
-            GREEN "  Array      :" RESET " %.6f s\n" BLUE "  ArrayList  :" RESET " %.6f s\n" CYAN "  LinkedList :" RESET " %.6f s\n\n",
-            timeArray,
-            timeArrayList,
-            timeLinkedList);
+        fprintf(file, "%d,%f,%f,%f\n", n, tArr, tAL, tLL);
+        
+        // Limpiar la línea de la barra de progreso y escribir la fila de la tabla
+        printf("\r%-12d | %-12.6f | %-12.6f | %-12.6f\n", n, tArr, tAL, tLL);
 
         free(base);
-        free(array);
     }
 
     fclose(file);
-
-    printf(GREEN BOLD
-           "[OK] Resultados guardados en %s\n" RESET,
-           filename);
-
+    printf(GREEN "  [OK] Resultados guardados en %s\n" RESET, filename);
     return 0;
 }
 
-int main(void)
-{
-
+int main(void) {
     srand((unsigned int)time(NULL));
 
     printf(BOLD WHITE
-           "\n========================================\n"
-           "         HEAP SORT BENCHMARK\n"
-           "========================================\n" RESET);
+           "\n==========================================================\n"
+           "                BENCHMARK: HEAP SORT V0.0.2\n"
+           "==========================================================\n" RESET);
 
-    runBenchmark(
-        "DATOS ALEATORIOS",
-        "heap-aleatorio-results.csv",
-        generateRandom);
+    runBenchmark("ESCENARIO: DATOS ALEATORIOS", "heap-aleatorio.csv", generateRandom);
+    runBenchmark("ESCENARIO: DATOS ORDENADOS", "heap-ordenado.csv", generateSorted);
+    runBenchmark("ESCENARIO: DATOS INVERTIDOS", "heap-invertido.csv", generateReversed);
 
-    runBenchmark(
-        "DATOS ORDENADOS",
-        "heap-ordenado-results.csv",
-        generateSorted);
-
-    runBenchmark(
-        "DATOS INVERTIDOS",
-        "heap-invertido-results.csv",
-        generateReversed);
-
-    printf(BOLD GREEN
-           "\nBenchmark finalizado correctamente.\n" RESET);
+    printf(BOLD GREEN "\nPruebas completadas con éxito.\n" RESET);
 
     return 0;
 }
