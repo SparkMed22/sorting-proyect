@@ -1,6 +1,14 @@
-#include "listas.h"
+#include "lists.h"
 
+/**
+ * @file heapSort.h
+ * @brief Firma de los metodos para HeapSort
+ * @author Francisco Medina 
+ * @date 2026-05-04            
+ * @version 0.0.1              
+ */
 
+ 
 static bool arraylist_resize(ArrayList *list, int new_capacity) {
     NOT_NULL(list);
 

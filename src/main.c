@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "listas.h"
 #include "heapSort.h"
 #include "radixSort.h"
 #include "quickSort.h"

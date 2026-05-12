@@ -1,3 +1,10 @@
+/**
+ * @file heapSort.h
+ * @brief Firma de los metodos para Lab_HeapSort
+ * @author Francisco Medina 
+ * @date 2026-05-04            
+ * @version 0.0.1              
+ */
 #ifndef TEST_HEAPSORT_H
 #define TEST_HEAPSORT_H
 

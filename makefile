@@ -4,12 +4,12 @@ CFLAGS = -Wall -Wextra -Iinclude -g -O2
 SRC_DIR = src
 OBJ_DIR = obj
 
-BASE_SRCS = src/listas.c src/util.c
+BASE_SRCS = src/lists.c src/util.c
 
 HEAP_SRCS = src/heapSort.c src/lab_HeapSort.c
 RADIX_SRCS = src/radixSort.c src/lab_RadixSort.c
 QUICK_SRCS = src/quickSort.c src/lab_QuickSort.c 
-MAIN_SRCS = src/main.c  src/heapSort.c src/radixSort.c
+MAIN_SRCS = src/main.c $(HEAP_SRCS) $(RADIX_SRCS) $(QUICK_SRCS) $(BASE_SRCS)
 
 .PHONY: all clean lab_heap lab_radix run_main
 

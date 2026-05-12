@@ -1,5 +1,4 @@
 #include "quickSort.h"
-#include "listas.h"
 #include <stdlib.h>
 #include <time.h>
 

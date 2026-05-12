@@ -1,5 +1,12 @@
-#ifndef LISTAS_H
-#define LISTAS_H
+#ifndef LISTS_H
+#define LISTS_H
+/**
+ * @file lists.h
+ * @brief Firma de los metodos y estructuras para Listas
+ * @author Francisco Medina 
+ * @date 2026-05-04            
+ * @version 0.0.1              
+ */
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -21,9 +28,9 @@ bool arraylist_push(ArrayList *list, int value);
 void arraylist_free(ArrayList *list);
 
 
-/* ===========================
-   LINKED LIST (simple)
-   =========================== */
+/** 
+ *  LINKED LIST (simple)
+ */ 
 
 typedef struct Nodo {
     int value;
