@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "listas.h"
 #include "radixSort.h"
 #include "util.h"
 #include "lab_RadixSort.h"
