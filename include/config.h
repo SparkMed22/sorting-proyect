@@ -18,5 +18,10 @@
 #define BOLD "\x1b[1m"
 #define WHITE "\x1b[37m"
 #define MAGENTA "\x1b[35m"
+#define BG_BLUE     "\033[44m"
+#define BG_MAGENTA  "\033[45m"
+#define BG_CYAN     "\033[46m"
+#define BOLD_BLUE   "\033[1;34m"
+#define BOLD_MAGENTA "\033[1;35m"
 
 #endif

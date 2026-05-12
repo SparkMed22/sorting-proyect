@@ -13,7 +13,7 @@
 
 static const int sizes[] = {
     100, 500, 1000, 2000, 5000, 10000, 20000, 
-    50000, 100000, 200000, 500000, 1000000};
+    50000, 100000, 200000, 500000, 1000000,2000000};
 
 static const int TOTAL_SIZES = sizeof(sizes) / sizeof(sizes[0]);
 
@@ -23,17 +23,17 @@ typedef void (*GeneratorFunction)(int *, int);
  * @brief Dibuja una barra de progreso simple en la terminal.
  */
 void printProgress(int current, int total) {
-    int width = 20;
+    int width = 30;
     float progress = (float)current / total;
     int pos = width * progress;
 
-    printf(WHITE "  Progreso: [" RESET);
+    printf("  " WHITE "Estado: [" RESET);
     for (int i = 0; i < width; ++i) {
-        if (i < pos) printf(CYAN "=" RESET);
-        else if (i == pos) printf(CYAN ">" RESET);
+        if (i < pos) printf(CYAN "█" RESET);
+        else if (i == pos) printf(WHITE "▒" RESET);
         else printf(" ");
     }
-    printf(WHITE "] %d%%\r" RESET, (int)(progress * 100));
+    printf(WHITE "] " BOLD YELLOW "%d%%" RESET " \r", (int)(progress * 100));
     fflush(stdout);
 }
 
@@ -80,16 +80,17 @@ static double benchmarkLinkedList(const int *data, int n) {
 static int runBenchmark(const char *title, const char *filename, GeneratorFunction generator) {
     FILE *file = fopen(filename, "w");
     if (!file) {
-        printf(RED "\n[ERROR] No se pudo crear %s\n" RESET, filename);
+        printf(RED "\n[✘] ERROR: No se pudo crear el archivo %s\n" RESET, filename);
         return 1;
     }
 
     fprintf(file, "size,array_time,arraylist_time,linkedlist_time\n");
 
-    printf(BOLD CYAN "\n>> %s\n" RESET, title);
-    printf(BOLD WHITE "%-12s | %-12s | %-12s | %-12s\n" RESET, 
+    // Cabecera estilizada
+    printf("\n" BG_BLUE BOLD WHITE " %-58s " RESET "\n", title);
+    printf(BOLD WHITE " %-12s │ %-12s │ %-12s │ %-12s \n" RESET, 
            "Elementos", "Array (s)", "ArrayList(s)", "LinkedList(s)");
-    printf("-------------|--------------|--------------|--------------\n");
+    printf("─────────────┼──────────────┼──────────────┼──────────────\n");
 
     for (int s = 0; s < TOTAL_SIZES; s++) {
         int n = sizes[s];
@@ -100,13 +101,11 @@ static int runBenchmark(const char *title, const char *filename, GeneratorFuncti
 
         double tArr = 0, tAL = 0, tLL = 0;
 
-        // Promediamos para mayor precisión
         for (int i = 0; i < ITERACIONES_POR_PRUEBA; i++) {
             printProgress(s + 1, TOTAL_SIZES);
             tArr += benchmarkArray(base, n);
             tAL  += benchmarkArrayList(base, n);
-            // Ojo: LinkedList puede ser muy lento en n grandes, podrías omitirlo en n > 100k
-            if (n <= 100000) tLL += benchmarkLinkedList(base, n); 
+            tLL  += benchmarkLinkedList(base, n); 
         }
 
         tArr /= ITERACIONES_POR_PRUEBA;
@@ -115,30 +114,30 @@ static int runBenchmark(const char *title, const char *filename, GeneratorFuncti
 
         fprintf(file, "%d,%f,%f,%f\n", n, tArr, tAL, tLL);
         
-        // Limpiar la línea de la barra de progreso y escribir la fila de la tabla
-        printf("\r%-12d | %-12.6f | %-12.6f | %-12.6f\n", n, tArr, tAL, tLL);
+        // Limpiamos la barra de progreso y escribimos la fila con colores
+        printf("\r " BOLD "%-12d" RESET " │ " GREEN "%-12.6f" RESET " │ " CYAN "%-12.6f" RESET " │ " MAGENTA "%-12.6f" RESET "\n", 
+               n, tArr, tAL, tLL);
 
         free(base);
     }
 
-    fclose(file);
-    printf(GREEN "  [OK] Resultados guardados en %s\n" RESET, filename);
+    printf("─────────────┴──────────────┴──────────────┴──────────────\n");
+    printf(BOLD GREEN " [✔] ÉXITO: %s guardado.\n" RESET, filename);
     return 0;
 }
 
 int main(void) {
     srand((unsigned int)time(NULL));
 
-    printf(BOLD WHITE
-           "\n==========================================================\n"
-           "                BENCHMARK: HEAP SORT V0.0.2\n"
-           "==========================================================\n" RESET);
+    printf(BOLD CYAN "\n┌──────────────────────────────────────────────────────────┐");
+    printf("\n│                " WHITE "BENCHMARK: HEAP SORT V0.0.2" CYAN "               │");
+    printf("\n└──────────────────────────────────────────────────────────┘\n" RESET);
 
     runBenchmark("ESCENARIO: DATOS ALEATORIOS", "heap-aleatorio.csv", generateRandom);
     runBenchmark("ESCENARIO: DATOS ORDENADOS", "heap-ordenado.csv", generateSorted);
     runBenchmark("ESCENARIO: DATOS INVERTIDOS", "heap-invertido.csv", generateReversed);
 
-    printf(BOLD GREEN "\nPruebas completadas con éxito.\n" RESET);
+    printf(BOLD GREEN "\n[!] Todas las pruebas han finalizado correctamente.\n\n" RESET);
 
     return 0;
 }
