@@ -1,5 +1,5 @@
-#ifndef TEST_RADIXSORT_H
-#define TEST_RADIXSORT_H
+#ifndef LAB_RADIXSORT_H
+#define LAB_RADIXSORT_H
 
 int radix_sort_reversed(void);
 int radix_sort_sorted(void);
