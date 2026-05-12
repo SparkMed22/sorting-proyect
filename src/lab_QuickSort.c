@@ -2,7 +2,7 @@
  * @file lab_QuickSort.c
  * @brief Benchmark del algoritmo Quick Sort con visualización mejorada.
  *
- * @author Francisco Medina
+ * @author Gonzalo Solis
  * @date 2026-05-12
  * @version 0.0.3
  */

@@ -17,5 +17,6 @@
 #define CYAN "\x1b[36m"
 #define BOLD "\x1b[1m"
 #define WHITE "\x1b[37m"
+#define MAGENTA "\x1b[35m"
 
 #endif
