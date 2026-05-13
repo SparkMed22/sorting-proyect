@@ -2,47 +2,50 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Iinclude -g -O2
 
 SRC_DIR = src
-OBJ_DIR = obj
 
-BASE_SRCS = src/lists.c src/util.c
+BASE_SRCS = $(SRC_DIR)/lists.c $(SRC_DIR)/util.c
 
-HEAP_SRCS = src/heapSort.c src/lab_HeapSort.c
-RADIX_SRCS = src/radixSort.c src/lab_RadixSort.c
-QUICK_SRCS = src/quickSort.c src/lab_QuickSort.c 
-MAIN_SRCS = src/main.c src/heapSort.c src/radixSort.c src/quickSort.c  $(BASE_SRCS)
+HEAP_SRCS  = $(SRC_DIR)/heapSort.c $(SRC_DIR)/lab_HeapSort.c
+RADIX_SRCS = $(SRC_DIR)/radixSort.c $(SRC_DIR)/lab_RadixSort.c
+QUICK_SRCS = $(SRC_DIR)/quickSort.c $(SRC_DIR)/lab_QuickSort.c
 
-.PHONY: all clean lab_heap lab_radix run_main
+MAIN_SRCS = \
+	$(SRC_DIR)/main.c \
+	$(SRC_DIR)/heapSort.c \
+	$(SRC_DIR)/radixSort.c \
+	$(SRC_DIR)/quickSort.c \
+	$(BASE_SRCS)
 
-programa.exe: $(MAIN_SRCS) $(BASE_SRCS)
-	$(CC) $(CFLAGS) $^ -o $@
+.PHONY: all clear lab_heap lab_radix lab_quick run_main
 
 all: programa.exe
 
+programa.exe: $(MAIN_SRCS)
+	$(CC) $(CFLAGS) $^ -o $@
+
 lab_heap: $(BASE_SRCS) $(HEAP_SRCS)
 	@echo ">>> Compilando pruebas de HeapSort..."
-	$(CC) $(CFLAGS) $(HEAP_SRCS) $(BASE_SRCS) -o lab_heap.exe
+	$(CC) $(CFLAGS) $^ -o lab_heap.exe
 	@echo ">>> Ejecutando lab_heap.exe..."
 	./lab_heap.exe
 
 lab_radix: $(BASE_SRCS) $(RADIX_SRCS)
 	@echo ">>> Compilando pruebas de RadixSort..."
-	$(CC) $(CFLAGS) $(RADIX_SRCS) $(BASE_SRCS) -o lab_radix.exe
+	$(CC) $(CFLAGS) $^ -o lab_radix.exe
 	@echo ">>> Ejecutando lab_radix.exe..."
 	./lab_radix.exe
 
-lab_Quick: $(BASE_SRCS) $(QUICK_SRCS)
+lab_quick: $(BASE_SRCS) $(QUICK_SRCS)
 	@echo ">>> Compilando pruebas de QuickSort..."
-	$(CC) $(CFLAGS) $(QUICK_SRCS) $(BASE_SRCS) -o lab_Quick.exe
-	@echo ">>> Ejecutando lab_Quick.exe..."
-	./lab_Quick.exe
-
+	$(CC) $(CFLAGS) $^ -o lab_quick.exe
+	@echo ">>> Ejecutando lab_quick.exe..."
+	./lab_quick.exe
 
 run_main: programa.exe
-	@echo ">>> Ejecutando programa principal (main.c)..."
+	@echo ">>> Ejecutando programa principal..."
 	./programa.exe
 
 clear:
 	rm -f *.exe
-	rm -rf obj
 	rm -f *.csv
 	@echo "Limpieza completada."

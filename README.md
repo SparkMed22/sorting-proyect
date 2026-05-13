@@ -92,5 +92,3 @@ El análisis experimental ratifica que la elección del algoritmo debe estar suj
 * Se recomienda **RadixSort** para el procesamiento masivo de datos numéricos donde el tiempo de ejecución sea crítico.
 * Se recomienda **QuickSort** para propósitos generales, dada su eficiencia superior en la práctica y su excelente manejo de datos parcialmente ordenados.
 * Se recomienda **HeapSort** en sistemas de tiempo real o críticos donde se requiera asegurar un tiempo de respuesta $O(n \log n)$ sin riesgo de degradación a casos cuadráticos.
-
----
