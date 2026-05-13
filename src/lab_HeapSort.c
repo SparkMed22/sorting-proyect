@@ -115,7 +115,7 @@ static int runBenchmark(const char *title, const char *filename, GeneratorFuncti
         fprintf(file, "%d,%f,%f,%f\n", n, tArr, tAL, tLL);
         
         // Limpiamos la barra de progreso y escribimos la fila con colores
-        printf("\r " BOLD "%-12d" RESET " │ " GREEN "%-12.6f" RESET " │ " CYAN "%-12.6f" RESET " │ " MAGENTA "%-12.6f" RESET "\n", 
+        printf("\r " BOLD "%-12d" RESET " │ " RED "%-12.6f" RESET " │ " CYAN "%-12.6f" RESET " │ " MAGENTA "%-12.6f" RESET "\n", 
                n, tArr, tAL, tLL);
 
         free(base);
