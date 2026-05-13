@@ -5,8 +5,8 @@
  * @date 2026-05-04            
  * @version 0.0.1              
  */
-#ifndef TEST_HEAPSORT_H
-#define TEST_HEAPSORT_H
+#ifndef LAB_HEAPSORT_H
+#define LAB_HEAPSORT_H
 
 int heap_sort_reversed(void);
 int heap_sort_sorted(void);
